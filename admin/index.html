@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Portfolio Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h2>Portfolio Admin</h2>
+                </div>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                <li><a href="#" data-section="personal"><i class="fas fa-user"></i> <span>Personal Info</span></a></li>
+                <li><a href="#" data-section="education"><i class="fas fa-graduation-cap"></i> <span>Education</span></a></li>
+                <li><a href="#" data-section="skills"><i class="fas fa-cogs"></i> <span>Skills</span></a></li>
+                <li><a href="#" data-section="projects"><i class="fas fa-project-diagram"></i> <span>Projects</span></a></li>
+                <li><a href="#" data-section="certifications"><i class="fas fa-certificate"></i> <span>Certifications</span></a></li>
+                <li><a href="#" data-section="workshops"><i class="fas fa-chalkboard-teacher"></i> <span>Workshops</span></a></li>
+                <li><a href="#" data-section="extracurricular"><i class="fas fa-users"></i> <span>Extracurricular</span></a></li>
+                <li><a href="#" data-section="languages"><i class="fas fa-language"></i> <span>Languages</span></a></li>
+                <li><a href="#" data-section="hobbies"><i class="fas fa-heart"></i> <span>Hobbies</span></a></li>
+                <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <div class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                    <div class="header-title">
+                        <h1>Portfolio Management System</h1>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-actions">
+                        <button id="saveAllBtn" class="btn primary-btn">
+                            <i class="fas fa-save"></i> Save All
+                        </button>
+                        <button id="previewBtn" class="btn secondary-btn">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                    <div class="header-user">
+                        <span>Admin</span>
+                        <div class="user-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="admin-section active">
+                <div class="section-header">
+                    <h2>Dashboard</h2>
+                    <p>Overview of your portfolio</p>
+                </div>
+                
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Personal Info</h3>
+                            <p>Updated</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Education</h3>
+                            <p id="educationCount">0 items</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Projects</h3>
+                            <p id="projectsCount">0 items</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Certifications</h3>
+                            <p id="certificationsCount">0 items</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-list" id="activityList">
+                        <div class="activity-item">
+                            <i class="fas fa-edit"></i>
+                            <div class="activity-content">
+                                <p>Updated personal information</p>
+                                <span class="activity-time">Just now</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Personal Info Section -->
+            <section id="personal" class="admin-section">
+                <div class="section-header">
+                    <h2>Personal Information</h2>
+                    <p>Update your personal details</p>
+                    <div class="section-actions">
+                        <button class="btn primary-btn save-section-btn" data-section="personal">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="title">Professional Title</label>
+                            <input type="text" id="title" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="summary">Professional Summary</label>
+                        <textarea id="summary" class="form-control" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="details">Additional Details</label>
+                        <textarea id="details" class="form-control" rows="4"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="profileImage">Profile Image URL</label>
+                            <input type="text" id="profileImage" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="text" id="phone" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="linkedin">LinkedIn</label>
+                        <input type="text" id="linkedin" class="form-control">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Education Section -->
+            <section id="education" class="admin-section">
+                <div class="section-header">
+                    <h2>Education</h2>
+                    <p>Manage your educational background</p>
+                    <div class="section-actions">
+                        <button id="addEducationBtn" class="btn primary-btn">
+                            <i class="fas fa-plus"></i> Add Education
+                        </button>
+                        <button class="btn primary-btn save-section-btn" data-section="education">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="list-container" id="educationList">
+                    <!-- Education items will be dynamically added here -->
+                </div>
+            </section>
+
+            <!-- Skills Section -->
+            <section id="skills" class="admin-section">
+                <div class="section-header">
+                    <h2>Skills</h2>
+                    <p>Manage your technical and soft skills</p>
+                    <div class="section-actions">
+                        <button class="btn primary-btn save-section-btn" data-section="skills">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="skills-container">
+                    <div class="skills-column">
+                        <h3>Technical Skills</h3>
+                        <div class="skills-editor" id="technicalSkillsEditor">
+                            <!-- Technical skills will be dynamically added here -->
+                        </div>
+                        <div class="add-skill-container">
+                            <input type="text" id="newTechnicalSkill" class="form-control" placeholder="Add new technical skill">
+                            <button id="addTechnicalSkillBtn" class="btn secondary-btn">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                    <div class="skills-column">
+                        <h3>Soft Skills</h3>
+                        <div class="skills-editor" id="softSkillsEditor">
+                            <!-- Soft skills will be dynamically added here -->
+                        </div>
+                        <div class="add-skill-container">
+                            <input type="text" id="newSoftSkill" class="form-control" placeholder="Add new soft skill">
+                            <button id="addSoftSkillBtn" class="btn secondary-btn">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects" class="admin-section">
+                <div class="section-header">
+                    <h2>Projects</h2>
+                    <p>Manage your project portfolio</p>
+                    <div class="section-actions">
+                        <button id="addProjectBtn" class="btn primary-btn">
+                            <i class="fas fa-plus"></i> Add Project
+                        </button>
+                        <button class="btn primary-btn save-section-btn" data-section="projects">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="list-container" id="projectsList">
+                    <!-- Project items will be dynamically added here -->
+                </div>
+            </section>
+
+            <!-- Certifications Section -->
+            <section id="certifications" class="admin-section">
+                <div class="section-header">
+                    <h2>Certifications</h2>
+                    <p>Manage your certifications</p>
+                    <div class="section-actions">
+                        <button id="addCertificationBtn" class="btn primary-btn">
+                            <i class="fas fa-plus"></i> Add Certification
+                        </button>
+                        <button class="btn primary-btn save-section-btn" data-section="certifications">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="list-container" id="certificationsList">
+                    <!-- Certification items will be dynamically added here -->
+                </div>
+            </section>
+
+            <!-- Workshops Section -->
+            <section id="workshops" class="admin-section">
+                <div class="section-header">
+                    <h2>Workshops</h2>
+                    <p>Manage your workshop experience</p>
+                    <div class="section-actions">
+                        <button id="addWorkshopBtn" class="btn primary-btn">
+                            <i class="fas fa-plus"></i> Add Workshop
+                        </button>
+                        <button class="btn primary-btn save-section-btn" data-section="workshops">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="list-container" id="workshopsList">
+                    <!-- Workshop items will be dynamically added here -->
+                </div>
+            </section>
+
+            <!-- Extracurricular Section -->
+            <section id="extracurricular" class="admin-section">
+                <div class="section-header">
+                    <h2>Extracurricular Activities</h2>
+                    <p>Manage your extracurricular involvement</p>
+                    <div class="section-actions">
+                        <button id="addExtracurricularBtn" class="btn primary-btn">
+                            <i class="fas fa-plus"></i> Add Activity
+                        </button>
+                        <button class="btn primary-btn save-section-btn" data-section="extracurricular">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="list-container" id="extracurricularList">
+                    <!-- Extracurricular items will be dynamically added here -->
+                </div>
+            </section>
+
+            <!-- Languages Section -->
+            <section id="languages" class="admin-section">
+                <div class="section-header">
+                    <h2>Languages</h2>
+                    <p>Manage your language proficiencies</p>
+                    <div class="section-actions">
+                        <button class="btn primary-btn save-section-btn" data-section="languages">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="languages-editor" id="languagesEditor">
+                    <!-- Languages will be dynamically added here -->
+                </div>
+                <div class="add-language-container">
+                    <input type="text" id="newLanguage" class="form-control" placeholder="Add new language">
+                    <button id="addLanguageBtn" class="btn secondary-btn">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </section>
+
+            <!-- Hobbies Section -->
+            <section id="hobbies" class="admin-section">
+                <div class="section-header">
+                    <h2>Hobbies</h2>
+                    <p>Manage your hobbies and interests</p>
+                    <div class="section-actions">
+                        <button class="btn primary-btn save-section-btn" data-section="hobbies">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="hobbies-editor" id="hobbiesEditor">
+                    <!-- Hobbies will be dynamically added here -->
+                </div>
+                <div class="add-hobby-container">
+                    <input type="text" id="newHobby" class="form-control" placeholder="Add new hobby">
+                    <button id="addHobbyBtn" class="btn secondary-btn">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Modal for adding/editing items -->
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add Item</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Modal content will be dynamically added here -->
+            </div>
+            <div class="modal-footer">
+                <button id="modalCancelBtn" class="btn secondary-btn">Cancel</button>
+                <button id="modalSaveBtn" class="btn primary-btn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

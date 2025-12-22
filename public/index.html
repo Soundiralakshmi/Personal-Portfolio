@@ -1,0 +1,281 @@
+<!-- Run Code--- npm start -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G. Soundiralakshmi - Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">G.Soundiralakshmi</div>
+                <div class="nav-links" id="navLinks">
+                    <a href="#home" class="active">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#education">Education</a>
+                    <a href="#skills">Skills</a>
+                    <a href="#projects">Projects</a>
+                    <a href="#certifications">Certifications</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-bg">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Hello, I'm <span id="heroName">Soundiralakshmi</span></h1>
+                    <h3 id="heroTitle">Student</h3>
+                    <p id="heroSummary">Passionate learner in IT with a focus on creative interfaces and real-time applications</p>
+                    <div class="hero-buttons">
+                        <a href="#contact" class="btn primary-btn">Contact Me</a>
+                        <a href="../public/pdf/SOUNDIRALAKSHMI G Resume.pdf" class="btn secondary-btn">View Resume</a>
+                    </div>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/soundiralakshmi/" id="linkedinLink" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="slsoundira21@gmai.com"><i class="fas fa-envelope"></i></a>
+                        <a href="+917904322845"><i class="fas fa-phone"></i></a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-image-container">
+                        <img id="profileImage" src="https://z-cdn-media.chatglm.cn/files/f3188da8-9be4-42c0-81c6-d8bbc0a8148e_G.Soundiralakshmi.jpg?auth_key=1789497993-a3cbf374b08c4589bdd8dce9616e44c1-0-100c392e8206f91b4b8c14fde1edaf7a" alt="G. Soundiralakshmi">
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-down">
+                <a href="#about" class="mouse">
+                    <span></span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">About Me</h2>
+                <div class="section-subtitle">Get to know me better</div>
+            </div>
+            <div class="about-content">
+                <div class="about-image">
+                    <div class="about-image-container">
+                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="About Me">
+                    </div>
+                </div>
+                <div class="about-text">
+                    <p id="aboutSummary">As a passionate learner in the field of IT, I'm always curious to explore new technologies and improve my skills. I enjoy working on creative interfaces and real-time applications.</p>
+                    <p id="aboutDetails">Currently pursuing my B-Tech in Information Technology at Dr. MGR Educational and Research Institute, I have developed a strong foundation in programming, web development, and data science.</p>
+                    <div class="about-info">
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span id="contactLocation">Thiruvallur</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <span id="contactEmail">slsoundira21@gmai.com</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <span id="contactPhone">+91-7904322845</span>
+                        </div>
+                    </div>
+                    <div class="languages">
+                        <h3>Languages</h3>
+                        <div class="language-tags" id="languageTags">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="section bg-light">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Education</h2>
+                <div class="section-subtitle">My academic journey</div>
+            </div>
+            <div class="timeline" id="educationTimeline">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Skills</h2>
+                <div class="section-subtitle">What I'm good at</div>
+            </div>
+            <div class="skills-container">
+                <div class="skills-column">
+                    <h3>Technical Skills</h3>
+                    <div class="skills-grid" id="technicalSkills">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+                <div class="skills-column">
+                    <h3>Soft Skills</h3>
+                    <div class="skills-list" id="softSkills">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section bg-light">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Projects</h2>
+                <div class="section-subtitle">My recent work</div>
+            </div>
+            <div class="projects-grid" id="projectsGrid">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section id="certifications" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Certifications & Workshops</h2>
+                <div class="section-subtitle">Professional development</div>
+            </div>
+            <div class="certifications-container">
+                <div class="cert-column">
+                    <h3>Certifications</h3>
+                    <div class="cert-list" id="certificationsList">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+                <div class="cert-column">
+                    <h3>Workshops</h3>
+                    <div class="cert-list" id="workshopsList">
+                        <!-- Dynamically populated -->
+                    </div>
+                    <h3>Extracurricular Activities</h3>
+                    <div class="cert-list" id="extracurricularList">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section bg-light">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get In Touch</h2>
+                <div class="section-subtitle">Let's connect</div>
+            </div>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h3>Location</h3>
+                            <p id="contactLocation2">Thiruvallur</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h3>Phone</h3>
+                            <p id="contactPhone2">+91-7904322845</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h3>Email</h3>
+                            <p id="contactEmail2">slsoundira21@gmai.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fab fa-linkedin"></i>
+                        </div>
+                        <div>
+                            <h3>LinkedIn</h3>
+                            <p id="contactLinkedin">linkedin.com/in/soundiralakshmi</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="Your Message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn primary-btn">Send Message</button>
+                    </form>
+                    <div id="formMessage" class="form-message"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>G. Soundiralakshmi</h2>
+                    <p>Information Technology Student</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#" id="footerLinkedin" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="mailto:slsoundira21@gmai.com"><i class="fas fa-envelope"></i></a>
+                    <a href="tel:+917904322845"><i class="fas fa-phone"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 G. Soundiralakshmi. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
