@@ -6,34 +6,49 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// MySQL database connection pool
-const db = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'portfolio_db',
-    port: process.env.DB_PORT || 3306,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
+// Determine whether to use MySQL or fall back to JSON file
+const useFileDb = !process.env.DB_HOST;
+let db;
+if (!useFileDb) {
+    // MySQL database connection pool
+    db = mysql.createPool({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+        port: process.env.DB_PORT || 3306,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0
+    });
+}
 
-// Test database connection
-db.getConnection((err, connection) => {
-    if (err) {
-        console.error('Database connection failed:', err.message);
-        console.log('Make sure XAMPP MySQL is running and database is created');
+// Test database connection (or initialize file data)
+if (useFileDb) {
+    console.log('No DB host provided; using local JSON file for data');
+    // ensure data file exists
+    initializeFileData();
+} else {
+    db.getConnection((err, connection) => {
+        if (err) {
+            console.error('Database connection failed:', err.message);
+            console.log('Make sure your cloud MySQL is accessible');
+            return;
+        }
+        console.log('Connected to MySQL database');
+        connection.release();
+
+        // Initialize data if not exists
+        initializeDatabase();
+    });
+}
+
+// Initialize database with default data (MySQL only)
+function initializeDatabase() {
+    if (useFileDb) {
+        // file-based initialization handled elsewhere
         return;
     }
-    console.log('Connected to MySQL database');
-    connection.release();
-
-    // Initialize data if not exists
-    initializeDatabase();
-});
-
-// Initialize database with default data
-function initializeDatabase() {
     const checkQuery = 'SELECT COUNT(*) as count FROM portfolio';
 
     db.query(checkQuery, (err, results) => {
@@ -51,7 +66,6 @@ function initializeDatabase() {
 // Insert initial portfolio data
 function insertInitialData() {
     const initialData = {
-        personalInfo: {
             name: "G. Soundiralakshmi",
             title: "Student",
             summary: "As a passionate learner in the field of IT, I'm always curious to explore new technologies and improve my skills. I enjoy working on creative interfaces and real-time applications. I look forward to opportunities where I can apply my knowledge, grow professionally, and make a valuable impact in a team or organization.",
@@ -176,6 +190,12 @@ function insertInitialData() {
     };
 
     const insertQuery = 'INSERT INTO portfolio (data) VALUES (?)';
+    if (useFileDb) {
+        // write to file instead
+        saveFileData(initialData);
+        console.log('Initial data saved to local JSON file');
+        return;
+    }
     db.query(insertQuery, [JSON.stringify(initialData)], (err, result) => {
         if (err) {
             console.error('Error inserting initial data:', err.message);
@@ -190,6 +210,31 @@ function insertInitialData() {
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Helper for file-based storage
+const dataFilePath = path.join(__dirname, 'data.json');
+function loadFileData() {
+    try {
+        const raw = fs.readFileSync(dataFilePath, 'utf-8');
+        return JSON.parse(raw);
+    } catch (e) {
+        return null;
+    }
+}
+function saveFileData(obj) {
+    try {
+        fs.writeFileSync(dataFilePath, JSON.stringify(obj, null, 2), 'utf-8');
+    } catch (e) {
+        console.error('Error writing data file:', e.message);
+    }
+}
+function initializeFileData() {
+    if (!fs.existsSync(dataFilePath)) {
+        console.log('Data file not found; creating with default data');
+        // copy initialData from earlier in file or call insertInitialData
+        insertInitialData();
+    }
+}
 
 // Serve static files from public folder (frontend)
 app.use(express.static(path.join(__dirname, '../public'), {
@@ -207,6 +252,14 @@ app.use('/admin', express.static(path.join(__dirname, '../admin'), {
 
 // Get portfolio data
 app.get('/api/portfolio', (req, res) => {
+    if (useFileDb) {
+        const data = loadFileData();
+        if (!data) {
+            return res.status(404).json({ error: 'Portfolio data not found' });
+        }
+        return res.json(data);
+    }
+
     const query = 'SELECT data FROM portfolio LIMIT 1';
 
     db.query(query, (err, results) => {
@@ -232,6 +285,19 @@ app.get('/api/portfolio', (req, res) => {
 // Update portfolio data
 app.put('/api/portfolio', (req, res) => {
     const { section, data } = req.body;
+
+    if (useFileDb) {
+        let currentData = loadFileData() || {};
+        let updatedData;
+        if (section === 'all') {
+            updatedData = data;
+        } else {
+            updatedData = { ...currentData };
+            updatedData[section] = data[section];
+        }
+        saveFileData(updatedData);
+        return res.json({ success: true, message: 'Portfolio data updated successfully' });
+    }
 
     // First get the current data
     const selectQuery = 'SELECT data FROM portfolio LIMIT 1';

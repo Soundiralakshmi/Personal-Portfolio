@@ -8,16 +8,38 @@ require('dotenv').config();
 const app = express();
 
 // Database connection
-const db = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'portfolio_db',
-    port: process.env.DB_PORT || 3306,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
+const useFileDb = !process.env.DB_HOST;
+let db;
+if (!useFileDb) {
+    db = mysql.createPool({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+        port: process.env.DB_PORT || 3306,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0
+    });
+}
+
+// File storage helpers (same as server.js)
+const fs = require('fs');
+const path = require('path');
+const dataFilePath = path.join(__dirname, '../server/data.json');
+function loadFileData() {
+    try { return JSON.parse(fs.readFileSync(dataFilePath, 'utf-8')); }
+    catch (e) { return null; }
+}
+function saveFileData(obj) {
+    try { fs.writeFileSync(dataFilePath, JSON.stringify(obj, null, 2), 'utf-8'); }
+    catch (e) { console.error('Error writing data file:', e.message); }
+}
+function initializeFileData() {
+    if (!fs.existsSync(dataFilePath)) {
+        insertInitialData();
+    }
+}
 
 // Middleware
 app.use(express.json());
@@ -37,6 +59,10 @@ app.use((req, res, next) => {
 
 // Initialize database with default data
 function initializeDatabase() {
+    if (useFileDb) {
+        initializeFileData();
+        return;
+    }
     const checkQuery = 'SELECT COUNT(*) as count FROM portfolio';
 
     db.query(checkQuery, (err, results) => {
@@ -69,6 +95,11 @@ function insertInitialData() {
     };
 
     const insertQuery = 'INSERT INTO portfolio (data) VALUES (?)';
+    if (useFileDb) {
+        saveFileData(initialData);
+        console.log('Initial data saved to local JSON file');
+        return;
+    }
     db.query(insertQuery, [JSON.stringify(initialData)], (err) => {
         if (err) {
             console.error('Error inserting initial data:', err.message);
@@ -81,19 +112,24 @@ function insertInitialData() {
 // Initialize on first call
 let initialized = false;
 if (!initialized) {
-    try {
-        db.getConnection((err, connection) => {
-            initialized = true;
-            if (err) {
-                console.error('Database connection failed:', err.message);
-                return;
-            }
-            console.log('Connected to MySQL database');
-            connection.release();
-            initializeDatabase();
-        });
-    } catch (e) {
-        console.error('Error connecting to database:', e.message);
+    initialized = true;
+    if (useFileDb) {
+        console.log('Using file storage for portfolio data');
+        initializeFileData();
+    } else {
+        try {
+            db.getConnection((err, connection) => {
+                if (err) {
+                    console.error('Database connection failed:', err.message);
+                    return;
+                }
+                console.log('Connected to MySQL database');
+                connection.release();
+                initializeDatabase();
+            });
+        } catch (e) {
+            console.error('Error connecting to database:', e.message);
+        }
     }
 }
 
@@ -101,6 +137,13 @@ if (!initialized) {
 
 // Get portfolio data
 app.get('/api/portfolio', (req, res) => {
+    if (useFileDb) {
+        const data = loadFileData();
+        if (!data) {
+            return res.status(404).json({ error: 'Portfolio data not found' });
+        }
+        return res.json(data);
+    }
     const query = 'SELECT data FROM portfolio LIMIT 1';
 
     db.query(query, (err, results) => {
@@ -126,6 +169,19 @@ app.get('/api/portfolio', (req, res) => {
 // Update portfolio data
 app.put('/api/portfolio', (req, res) => {
     const { section, data } = req.body;
+
+    if (useFileDb) {
+        let currentData = loadFileData() || {};
+        let updatedData;
+        if (section === 'all') {
+            updatedData = data;
+        } else {
+            updatedData = { ...currentData };
+            updatedData[section] = data[section];
+        }
+        saveFileData(updatedData);
+        return res.json({ success: true, message: 'Portfolio data updated successfully' });
+    }
 
     const selectQuery = 'SELECT data, id FROM portfolio LIMIT 1';
 
