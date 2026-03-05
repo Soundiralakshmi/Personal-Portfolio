@@ -329,6 +329,48 @@ header {
     transform: translateY(-3px);
 }
 
+/* Contact Dialog */
+.dialog {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.dialog-content {
+    background-color: #fff;
+    margin: 20% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 300px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close-dialog {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-dialog:hover {
+    color: #000;
+}
+
+#dialogText {
+    font-size: 18px;
+    margin: 20px 0;
+    color: #333;
+}
+
 .hero-image {
     flex: 1;
     max-width: 400px;

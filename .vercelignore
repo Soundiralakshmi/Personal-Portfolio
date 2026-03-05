@@ -1,0 +1,10 @@
+node_modules
+.git
+.gitignore
+README.md
+README_XAMPP.md
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store

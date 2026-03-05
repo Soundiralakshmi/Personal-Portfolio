@@ -45,17 +45,17 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1>Hello, I'm <span id="heroName">Soundiralakshmi</span></h1>
+                    <h1>Hello I'm<br><span id="heroName">Soundiralakshmi .G</span></h1>
                     <h3 id="heroTitle">Student</h3>
                     <p id="heroSummary">Passionate learner in IT with a focus on creative interfaces and real-time applications</p>
                     <div class="hero-buttons">
                         <a href="#contact" class="btn primary-btn">Contact Me</a>
-                        <a href="../public/pdf/SOUNDIRALAKSHMI G Resume.pdf" class="btn secondary-btn">View Resume</a>
+                        <a id="resumeLink" href="" class="btn secondary-btn" target="_blank">View Resume</a>
                     </div>
                     <div class="social-links">
                         <a href="https://www.linkedin.com/in/soundiralakshmi/" id="linkedinLink" target="_blank"><i class="fab fa-linkedin"></i></a>
-                        <a href="slsoundira21@gmai.com"><i class="fas fa-envelope"></i></a>
-                        <a href="+917904322845"><i class="fas fa-phone"></i></a>
+                        <a href="#" onclick="showEmailDialog()" id="emailLink"><i class="fas fa-envelope"></i></a>
+                        <a href="#" onclick="showPhoneDialog()" id="phoneLink"><i class="fas fa-phone"></i></a>
                     </div>
                 </div>
                 <div class="hero-image">
@@ -275,6 +275,14 @@
             </div>
         </div>
     </footer>
+
+    <!-- Contact Dialog -->
+    <div id="contactDialog" class="dialog">
+        <div class="dialog-content">
+            <span class="close-dialog" onclick="closeDialog()">&times;</span>
+            <p id="dialogText"></p>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

@@ -283,6 +283,7 @@ function renderPersonalInfo() {
     document.getElementById('phone').value = portfolioData.personalInfo.phone;
     document.getElementById('location').value = portfolioData.personalInfo.location;
     document.getElementById('linkedin').value = portfolioData.personalInfo.linkedin;
+    document.getElementById('resumeLink').value = portfolioData.personalInfo.resumeLink || '';
 }
 
 // Render education
@@ -684,6 +685,14 @@ function openModal(section, index = null) {
                     <label for="projectTechnologies">Technologies (comma separated)</label>
                     <input type="text" id="projectTechnologies" class="form-control" value="${currentEditItem ? currentEditItem.technologies.join(', ') : ''}">
                 </div>
+                <div class="form-group">
+                    <label for="projectImages">Images (URLs, one per line)</label>
+                    <textarea id="projectImages" class="form-control" rows="3">${currentEditItem ? (currentEditItem.images || []).join('\n') : ''}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="projectDemoLink">Demo Link (optional)</label>
+                    <input type="text" id="projectDemoLink" class="form-control" value="${currentEditItem ? currentEditItem.demoLink || '' : ''}">
+                </div>
             `;
             break;
             
@@ -744,7 +753,9 @@ function saveModalItem() {
             newItem = {
                 title: document.getElementById('projectTitle').value,
                 description: document.getElementById('projectDescription').value,
-                technologies: document.getElementById('projectTechnologies').value.split(',').map(tech => tech.trim())
+                technologies: document.getElementById('projectTechnologies').value.split(',').map(tech => tech.trim()),
+                images: document.getElementById('projectImages').value.split('\n').map(url => url.trim()).filter(url => url),
+                demoLink: document.getElementById('projectDemoLink').value
             };
             break;
             
@@ -836,7 +847,8 @@ function saveSection(section) {
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
                 location: document.getElementById('location').value,
-                linkedin: document.getElementById('linkedin').value
+                linkedin: document.getElementById('linkedin').value,
+                resumeLink: document.getElementById('resumeLink').value
             };
             break;
             

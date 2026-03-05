@@ -5,10 +5,11 @@
     "summary": "As a passionate learner in the field of IT, I'm always curious to explore new technologies and improve my skills. I enjoy working on creative interfaces and real-time applications. I look forward to opportunities where I can apply my knowledge, grow professionally, and make a valuable impact in a team or organization.",
     "details": "Currently pursuing my B-Tech in Information Technology at Dr. MGR Educational and Research Institute, I have developed a strong foundation in programming, web development, and data science.",
     "profileImage": "https://z-cdn-media.chatglm.cn/files/f3188da8-9be4-42c0-81c6-d8bbc0a8148e_G.Soundiralakshmi.jpg?auth_key=1789497993-a3cbf374b08c4589bdd8dce9616e44c1-0-100c392e8206f91b4b8c14fde1edaf7a",
-    "email": "slsoundira21@gmai.com",
+    "email": "soundiralakshmi21it@gmail.com",
     "phone": "+91-7904322845",
     "location": "Thiruvallur",
-    "linkedin": "https://www.linkedin.com/in/soundiralakshmi/"
+    "linkedin": "https://www.linkedin.com/in/soundiralakshmi/",
+    "resumeLink": "https://drive.google.com/file/d/1h1i9kwSzYzE8ElADbWXrif_z0EY0qDWE/view?usp=drive_link"
   },
   "education": [
     {
@@ -63,14 +64,18 @@
       "technologies": [
         "Flutter",
         "Dart"
-      ]
+      ],
+      "images": [],
+      "demoLink": ""
     },
     {
       "title": "Harbour Management System Using Python",
       "description": "Mini project",
       "technologies": [
         "Python"
-      ]
+      ],
+      "images": [],
+      "demoLink": ""
     }
   ],
   "certifications": [

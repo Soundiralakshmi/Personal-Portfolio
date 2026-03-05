@@ -1,30 +1,67 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const mysql = require('mysql2');
+require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware
-app.use(express.json());
-app.use(express.static(path.join(__dirname, '../public')));
-app.use('/admin', express.static(path.join(__dirname, '../admin')));
+// MySQL database connection pool
+const db = mysql.createPool({
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'portfolio_db',
+    port: process.env.DB_PORT || 3306,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+});
 
-// Data file path
-const dataFilePath = path.join(__dirname, 'data.json');
+// Test database connection
+db.getConnection((err, connection) => {
+    if (err) {
+        console.error('Database connection failed:', err.message);
+        console.log('Make sure XAMPP MySQL is running and database is created');
+        return;
+    }
+    console.log('Connected to MySQL database');
+    connection.release();
 
-// Initialize data file if it doesn't exist
-if (!fs.existsSync(dataFilePath)) {
+    // Initialize data if not exists
+    initializeDatabase();
+});
+
+// Initialize database with default data
+function initializeDatabase() {
+    const checkQuery = 'SELECT COUNT(*) as count FROM portfolio';
+
+    db.query(checkQuery, (err, results) => {
+        if (err) {
+            console.error('Error checking database:', err.message);
+            return;
+        }
+
+        if (results[0].count === 0) {
+            insertInitialData();
+        }
+    });
+}
+
+// Insert initial portfolio data
+function insertInitialData() {
     const initialData = {
         personalInfo: {
             name: "G. Soundiralakshmi",
-            title: "Information Technology Student",
+            title: "Student",
             summary: "As a passionate learner in the field of IT, I'm always curious to explore new technologies and improve my skills. I enjoy working on creative interfaces and real-time applications. I look forward to opportunities where I can apply my knowledge, grow professionally, and make a valuable impact in a team or organization.",
             details: "Currently pursuing my B-Tech in Information Technology at Dr. MGR Educational and Research Institute, I have developed a strong foundation in programming, web development, and data science.",
             profileImage: "https://z-cdn-media.chatglm.cn/files/f3188da8-9be4-42c0-81c6-d8bbc0a8148e_G.Soundiralakshmi.jpg?auth_key=1789497993-a3cbf374b08c4589bdd8dce9616e44c1-0-100c392e8206f91b4b8c14fde1edaf7a",
-            email: "slsoundira21@gmai.com",
+            email: "soundiralakshmi21it@gmail.com",
             phone: "+91-7904322845",
             location: "Thiruvallur",
-            linkedin: "linkedin.com/in/soundiralakshmi"
+            linkedin: "https://www.linkedin.com/in/soundiralakshmi/",
+            resumeLink: "https://drive.google.com/file/d/1h1i9kwSzYzE8ElADbWXrif_z0EY0qDWE/view?usp=drive_link"
         },
         education: [
             {
@@ -35,7 +72,7 @@ if (!fs.existsSync(dataFilePath)) {
                 result: "CGPA - 7.52%"
             },
             {
-                degree: "Intermediate (12th Grade)",
+                degree: "Intermediate",
                 institution: "Christ King Matriculation Higher Secondary School",
                 location: "Thiruvallur",
                 period: "2021 - 2022",
@@ -50,20 +87,47 @@ if (!fs.existsSync(dataFilePath)) {
             }
         ],
         skills: {
-            technical: ["Python", "UI using Figma", "Java", "C, C++", "HTML, CSS", "Flutter using Dart Language", "Data Science using R"],
-            soft: ["Public Relations", "Teamwork", "Time Management", "Leadership", "Effective Communication", "Creative Thinking"]
+            technical: [
+                "Python",
+                "UI using Figma",
+                "Java",
+                "C, C++",
+                "HTML, CSS",
+                "Flutter using Dart Language",
+                "Data Science using R"
+            ],
+            soft: [
+                "Public Relations",
+                "Teamwork",
+                "Time Management",
+                "Leadership",
+                "Effective Communication",
+                "Creative Thinking"
+            ]
         },
-        languages: ["Tamil", "English"],
+        languages: [
+            "Tamil",
+            "English"
+        ],
         projects: [
             {
                 title: "Expenses Tracker using Flutter",
                 description: "Mini project",
-                technologies: ["Flutter", "Dart"]
+                technologies: [
+                    "Flutter",
+                    "Dart"
+                ],
+                images: [],
+                demoLink: ""
             },
             {
                 title: "Harbour Management System Using Python",
                 description: "Mini project",
-                technologies: ["Python"]
+                technologies: [
+                    "Python"
+                ],
+                images: [],
+                demoLink: ""
             }
         ],
         certifications: [
@@ -106,48 +170,122 @@ if (!fs.existsSync(dataFilePath)) {
             "SDG Goal Club Member",
             "Grow Green Club Member"
         ],
-        hobbies: ["Listening music"]
+        hobbies: [
+            "Listening music"
+        ]
     };
-    
-    fs.writeFileSync(dataFilePath, JSON.stringify(initialData, null, 2));
+
+    const insertQuery = 'INSERT INTO portfolio (data) VALUES (?)';
+    db.query(insertQuery, [JSON.stringify(initialData)], (err, result) => {
+        if (err) {
+            console.error('Error inserting initial data:', err.message);
+        } else {
+            console.log('Initial data inserted into database');
+        }
+    });
 }
+
+
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Serve static files from public folder (frontend)
+app.use(express.static(path.join(__dirname, '../public'), {
+    maxAge: '1h',
+    etag: false
+}));
+
+// Serve admin panel static files
+app.use('/admin', express.static(path.join(__dirname, '../admin'), {
+    maxAge: '1h',
+    etag: false
+}));
 
 // API Routes
 
 // Get portfolio data
 app.get('/api/portfolio', (req, res) => {
-    try {
-        const data = fs.readFileSync(dataFilePath, 'utf8');
-        res.json(JSON.parse(data));
-    } catch (error) {
-        console.error('Error reading portfolio data:', error);
-        res.status(500).json({ error: 'Failed to read portfolio data' });
-    }
+    const query = 'SELECT data FROM portfolio LIMIT 1';
+
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Error fetching portfolio data:', err.message);
+            return res.status(500).json({ error: 'Failed to fetch portfolio data' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'Portfolio data not found' });
+        }
+
+        try {
+            const portfolioData = JSON.parse(results[0].data);
+            res.json(portfolioData);
+        } catch (parseError) {
+            console.error('Error parsing portfolio data:', parseError);
+            res.status(500).json({ error: 'Failed to parse portfolio data' });
+        }
+    });
 });
 
 // Update portfolio data
 app.put('/api/portfolio', (req, res) => {
-    try {
-        const { section, data } = req.body;
-        
-        // Read current data
-        const currentData = JSON.parse(fs.readFileSync(dataFilePath, 'utf8'));
-        
-        // Update data based on section
+    const { section, data } = req.body;
+
+    // First get the current data
+    const selectQuery = 'SELECT data FROM portfolio LIMIT 1';
+
+    db.query(selectQuery, (err, results) => {
+        if (err) {
+            console.error('Error fetching current portfolio data:', err.message);
+            return res.status(500).json({ error: 'Failed to fetch current portfolio data' });
+        }
+
+        let currentData;
+        if (results.length > 0) {
+            try {
+                currentData = JSON.parse(results[0].data);
+            } catch (parseError) {
+                console.error('Error parsing current portfolio data:', parseError);
+                return res.status(500).json({ error: 'Failed to parse current portfolio data' });
+            }
+        } else {
+            currentData = {};
+        }
+
+        let updatedData;
         if (section === 'all') {
             // Update entire portfolio
-            fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+            updatedData = data;
         } else {
             // Update specific section
-            currentData[section] = data[section];
-            fs.writeFileSync(dataFilePath, JSON.stringify(currentData, null, 2));
+            updatedData = { ...currentData };
+            updatedData[section] = data[section];
         }
-        
-        res.json({ success: true, message: 'Portfolio data updated successfully' });
-    } catch (error) {
-        console.error('Error updating portfolio data:', error);
-        res.status(500).json({ error: 'Failed to update portfolio data' });
-    }
+
+        // Update the database
+        let query;
+        let params;
+
+        if (results.length > 0) {
+            // Update existing record
+            query = 'UPDATE portfolio SET data = ? WHERE id = ?';
+            params = [JSON.stringify(updatedData), results[0].id];
+        } else {
+            // Insert new record
+            query = 'INSERT INTO portfolio (data) VALUES (?)';
+            params = [JSON.stringify(updatedData)];
+        }
+
+        db.query(query, params, (err, result) => {
+            if (err) {
+                console.error('Error updating portfolio data:', err.message);
+                return res.status(500).json({ error: 'Failed to update portfolio data' });
+            }
+            res.json({ success: true, message: 'Portfolio data updated successfully' });
+        });
+    });
 });
 
 // Admin login route (simplified for demo)
@@ -164,16 +302,21 @@ app.post('/api/admin/login', (req, res) => {
 });
 
 // Serve admin login page
-app.get('/admin/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '../admin/index.html'));
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, '../admin/login.html'));
 });
 
 // Admin dashboard (protected in a real app)
 app.get('/admin/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname, '../admin/dashboard.html'));
+    res.sendFile(path.join(__dirname, '../admin/index.html'));
 });
 
-// Start server
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
+// Start server (only for local development)
+if (require.main === module) {
+    app.listen(port, () => {
+        console.log(`Server running at http://localhost:${port}`);
+    });
+}
+
+// Export for Vercel serverless functions
+module.exports = app;

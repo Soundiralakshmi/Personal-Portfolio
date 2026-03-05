@@ -5,6 +5,9 @@ const navLinks = document.getElementById('navLinks');
 const contactForm = document.getElementById('contactForm');
 const formMessage = document.getElementById('formMessage');
 
+// Portfolio data
+let portfolioData = {};
+
 // Preloader
 window.addEventListener('load', () => {
     setTimeout(() => {
@@ -118,6 +121,7 @@ async function fetchPortfolioData() {
     try {
         const response = await fetch('/api/portfolio');
         const data = await response.json();
+        portfolioData = data;
         
         // Update DOM with fetched data
         updatePortfolioData(data);
@@ -129,11 +133,11 @@ async function fetchPortfolioData() {
 // Update portfolio data in the DOM
 function updatePortfolioData(data) {
     // Personal Info
-    document.getElementById('heroName').textContent = data.personalInfo.name;
+    document.getElementById('heroName').textContent = "Soundiralakshmi .G";
     document.getElementById('heroTitle').textContent = data.personalInfo.title;
     document.getElementById('heroSummary').textContent = data.personalInfo.summary;
     document.getElementById('profileImage').src = data.personalInfo.profileImage;
-    document.getElementById('linkedinLink').href = `https://${data.personalInfo.linkedin}`;
+    document.getElementById('linkedinLink').href = data.personalInfo.linkedin;
     document.getElementById('aboutSummary').textContent = data.personalInfo.summary;
     document.getElementById('aboutDetails').textContent = data.personalInfo.details;
     document.getElementById('contactLocation').textContent = data.personalInfo.location;
@@ -143,7 +147,8 @@ function updatePortfolioData(data) {
     document.getElementById('contactEmail').textContent = data.personalInfo.email;
     document.getElementById('contactEmail2').textContent = data.personalInfo.email;
     document.getElementById('contactLinkedin').textContent = data.personalInfo.linkedin;
-    document.getElementById('footerLinkedin').href = `https://${data.personalInfo.linkedin}`;
+    document.getElementById('footerLinkedin').href = data.personalInfo.linkedin;
+    document.getElementById('resumeLink').href = data.personalInfo.resumeLink || '';
     
     // Languages
     const languageTags = document.getElementById('languageTags');
@@ -199,9 +204,11 @@ function updatePortfolioData(data) {
     data.projects.forEach(project => {
         const div = document.createElement('div');
         div.className = 'project-card';
+        const imageSrc = project.images && project.images.length > 0 ? project.images[0] : 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+        const demoButton = project.demoLink ? `<a href="${project.demoLink}" target="_blank" class="btn primary-btn">View Demo</a>` : '';
         div.innerHTML = `
             <div class="project-image">
-                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="${project.title}">
+                <img src="${imageSrc}" alt="${project.title}">
             </div>
             <div class="project-content">
                 <h3>${project.title}</h3>
@@ -209,6 +216,7 @@ function updatePortfolioData(data) {
                 <div class="project-tech">
                     ${project.technologies.map(tech => `<span>${tech}</span>`).join('')}
                 </div>
+                ${demoButton}
             </div>
         `;
         projectsGrid.appendChild(div);
@@ -249,6 +257,21 @@ function updatePortfolioData(data) {
         div.innerHTML = `<h4>${activity}</h4>`;
         extracurricularList.appendChild(div);
     });
+}
+
+// Contact Dialog Functions
+function showEmailDialog() {
+    document.getElementById('dialogText').textContent = 'Email: ' + portfolioData.personalInfo.email;
+    document.getElementById('contactDialog').style.display = 'block';
+}
+
+function showPhoneDialog() {
+    document.getElementById('dialogText').textContent = 'Phone: ' + portfolioData.personalInfo.phone;
+    document.getElementById('contactDialog').style.display = 'block';
+}
+
+function closeDialog() {
+    document.getElementById('contactDialog').style.display = 'none';
 }
 
 // Initialize portfolio data on page load
